@@ -47,7 +47,14 @@ body {
 .mainIcons{
   display: flex;
   flex-direction: row;
-  /* justify-content: space-around; */
    gap: 24px; 
    align-items: center; 
+}
+
+.mainIcons img {
+  transition: transform 0.2s ease-in-out;
+}
+
+.mainIcons img:hover {
+  transform: scale(1.12);
 }
