@@ -1,5 +1,9 @@
-@import "tailwindcss";
 
+*{
+      margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -25,14 +29,25 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 .header{
-  background-color: rgb(188, 9, 9);
+  background-color: rgb(56, 136, 255);
   color: #ffffff;
   padding: 1rem;
   text-align: left;
   display:flex;
   height: 5%;
+    padding: 10px 20px; 
+      align-items: center;
+        justify-content: space-between; /* text stays on left icons on right */
+  
 }
 .brandName {
-  font-weight: 800;
-  font-size: 1.8rem; /* bigger than before */
+  font-weight: 600;
+  font-size: 1.8rem; 
+}
+.mainIcons{
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-around; */
+   gap: 24px; 
+   align-items: center; 
 }

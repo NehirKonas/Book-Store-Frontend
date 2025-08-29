@@ -35,11 +35,11 @@ export default function RootLayout({
         <header className="header flex items-center justify-between px-6 py-3">
           {/* Left side brand name */}
           <p className="brandName text-2xl font-extrabold tracking-wide">
-            Book Store
+            Ink
           </p>
 
           {/* Right side icons */}
-          <div className="flex items-center space-x-8">
+          <div className="mainIcons">
             <Link href="/cart">
               <Image
                 src="/icons/shopping-cart.png"
