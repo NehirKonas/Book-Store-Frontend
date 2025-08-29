@@ -26,12 +26,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           />
         </button>
       </div>
-      <div className="books-container">
             <div className="books-cards-container"> 
                 {children}
-
             </div>
-        </div>
+ 
     </div>
   );
 }
