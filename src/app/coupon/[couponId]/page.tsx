@@ -1,6 +1,6 @@
 
 
-export default function Profile(){
+export default function Coupon(){
     return <h1>My Profile</h1>;
 }
 //Writing this by its own does the routin /profile (file name), you may see it in server now

@@ -1,0 +1,55 @@
+.page {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  overflow: hidden; /* prevents the whole page from scrolling */
+}
+
+/* static image container */
+.book-image-container {
+  width: 60%;
+  border-radius: 25px;
+  background-color: rgb(216, 216, 216);
+  margin:15px;
+  flex-shrink: 0; /* don’t let flexbox shrink it */
+}
+
+/* scrollable book info */
+.book-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: 25px;
+  margin:15px;
+  overflow-y: auto; /* allows internal scrolling */
+  background-color: aliceblue;
+  padding: 20px;
+}
+
+.book-primary-info,
+.book-secondary-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.add-to-cart-button {
+  border-radius: 25px;
+  height: 40px;
+  font-size: larger;
+  font-weight: 600;
+  background-color: #4a90e2;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 0 4px rgba(74, 144, 226, 0.5);
+  cursor: pointer;
+  transition: transform 0.1s ease-in-out;
+  max-width: 300px;
+  margin-top: 20px;
+}
+
+.add-to-cart-button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 4px rgba(89, 255, 34, 0.614);
+  background-color: #18cb24;
+}

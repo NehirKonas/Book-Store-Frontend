@@ -1,4 +1,4 @@
-"use client";   // <-- Add this at the very top
+"use client"; 
 
 import React, { ReactNode } from "react";
 import Image from "next/image";
