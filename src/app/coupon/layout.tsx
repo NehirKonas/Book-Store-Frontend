@@ -4,11 +4,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import "./coupon.css";
 
 export type CouponCardProps = {
-  discountRate: number;          
+  discountRate: number;
   code: string;
-  expiresAt: string | Date; 
-  title?: string;          
-  description?: string;        
+  expiresAt: string | Date;
+  title?: string;
+  description?: string;
 };
 
 type TimeLeft = { d: number; h: number; m: number; s: number; totalMs: number };
@@ -24,7 +24,7 @@ function getTimeLeft(expiresAt: Date): TimeLeft {
   return { d, h, m, s, totalMs: diff };
 }
 
-export default function CouponCard({
+function CouponCard({
   discountRate,
   code,
   expiresAt,
@@ -34,16 +34,11 @@ export default function CouponCard({
   const expiry = useMemo(
     () => (expiresAt instanceof Date ? expiresAt : new Date(expiresAt)),
     [expiresAt]
-);
+  );
 
-//eg values
-code="EXCODE01";
-discountRate=20;
-
-
-//idk what dis is
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => getTimeLeft(expiry));
   const isExpired = timeLeft.totalMs === 0;
+
   useEffect(() => {
     const t = setInterval(() => setTimeLeft(getTimeLeft(expiry)), 1000);
     return () => clearInterval(t);
@@ -52,14 +47,12 @@ discountRate=20;
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(code);
-      // Optional: quick visual feedback
       const el = document.getElementById(`copy-status-${code}`);
       if (el) {
         el.textContent = "Copied!";
         setTimeout(() => (el.textContent = ""), 1200);
       }
     } catch {
-
       const temp = document.createElement("input");
       temp.value = code;
       document.body.appendChild(temp);
@@ -81,10 +74,7 @@ discountRate=20;
           {description ? <p className="coupon-desc">{description}</p> : null}
           {!isExpired ? (
             <p className="coupon-timer" aria-live="polite">
-              Expires in:{" "}
-              <strong>
-                {timeLeft.d}d {timeLeft.h}h {timeLeft.m}m {timeLeft.s}s
-              </strong>
+              Expires in: <strong>{timeLeft.d}d {timeLeft.h}h {timeLeft.m}m {timeLeft.s}s</strong>
             </p>
           ) : (
             <p className="coupon-expired-text">Expired</p>
@@ -94,20 +84,101 @@ discountRate=20;
 
       <div className="coupon-right">
         <div className="coupon-code-wrap">
-          <div className="coupon-code-wrap">
-            <span className="coupon-code">{code}</span>
-            <button
-                className="coupon-copy-btn"
-                onClick={handleCopy}
-                aria-label={`Copy coupon code ${code}`}
-                title="Copy code"
-            >
-                Copy
-            </button>
-        </div>
+          <span className="coupon-code">{code}</span>
+          <button
+            className="coupon-copy-btn"
+            onClick={handleCopy}
+            aria-label={`Copy coupon code ${code}`}
+            title="Copy code"
+          >
+            Copy
+          </button>
         </div>
         <span id={`copy-status-${code}`} className="copy-status" />
       </div>
+    </div>
+  );
+}
+
+export default function CouponLayout() {
+  const coupons: CouponCardProps[] = [
+    {
+      discountRate: 20,
+      code: "SAVE20",
+      expiresAt: new Date("2025-09-10T23:59:59"),
+      title: "Back to School",
+      description: "20% off all textbooks!",
+    },
+    {
+      discountRate: 50,
+      code: "HALFOFF",
+      expiresAt: new Date("2025-09-15T23:59:59"),
+      title: "Flash Sale",
+      description: "50% off select items!",
+    },
+    {
+      discountRate: 10,
+      code: "WELCOME10",
+      expiresAt: new Date("2025-10-01T23:59:59"),
+      title: "Welcome Bonus",
+      description: "10% off your first order",
+    },
+     {
+      discountRate: 20,
+      code: "SAVE20",
+      expiresAt: new Date("2025-09-10T23:59:59"),
+      title: "Back to School",
+      description: "20% off all textbooks!",
+    },
+    {
+      discountRate: 50,
+      code: "HALFOFF",
+      expiresAt: new Date("2025-09-15T23:59:59"),
+      title: "Flash Sale",
+      description: "50% off select items!",
+    },
+    {
+      discountRate: 10,
+      code: "WELCOME10",
+      expiresAt: new Date("2025-10-01T23:59:59"),
+      title: "Welcome Bonus",
+      description: "10% off your first order",
+    },
+     {
+      discountRate: 20,
+      code: "SAVE20",
+      expiresAt: new Date("2025-09-10T23:59:59"),
+      title: "Back to School",
+      description: "20% off all textbooks!",
+    },
+    {
+      discountRate: 50,
+      code: "HALFOFF",
+      expiresAt: new Date("2025-09-15T23:59:59"),
+      title: "Flash Sale",
+      description: "50% off select items!",
+    },
+    {
+      discountRate: 10,
+      code: "WELCOME10",
+      expiresAt: new Date("2025-10-01T23:59:59"),
+      title: "Welcome Bonus",
+      description: "10% off your first order",
+    },
+  ];
+
+  return (
+    <div className="coupon-container">
+      {coupons.map((coupon) => (
+        <CouponCard
+          key={coupon.code}
+          discountRate={coupon.discountRate}
+          code={coupon.code}
+          expiresAt={coupon.expiresAt}
+          title={coupon.title}
+          description={coupon.description}
+        />
+      ))}
     </div>
   );
 }
