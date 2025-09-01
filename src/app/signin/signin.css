@@ -1,0 +1,143 @@
+.mainContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.signinBox {
+  width: 100%;
+  max-width: 384px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+  padding: 24px;
+  background: rgba(255,255,255,.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.signinH {
+  font-size: 24px;
+  text-align: center;
+  font-weight: bold;
+  color: #111;
+}
+
+.inputField,.inputAddress, .inputName{
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 12px;
+  outline: none;
+  background: #fff;
+  color: #111;
+}
+.inputField:focus,.inputAddress:focus, .inputName:focus { 
+  border-color: #ec4899; 
+}
+
+/*Address thingy*/
+.addressing1{
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  
+}
+.addressing2{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.inputAddress {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;        
+  overflow: hidden;          
+  text-align: left;         
+  line-height: 1.4;          
+}
+
+
+
+.phone{
+  display: flex;
+  align-items: center;
+}
+
+.doksan {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;      
+  min-width: 10px;
+  background: inherit;     
+  color: inherit;          
+  border: 0;               
+  border-radius: 8px;      
+}
+
+.nameRow { 
+  display: flex;
+   gap: 12px; 
+  }
+.nameRow .inputName { 
+  flex: 1; 
+}
+
+.loginBtn {
+  width: 100%;
+  border-radius: 8px;
+  padding: 12px;
+  background: #ec4899;
+  color: #fff;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background .2s;
+}
+.loginBtn:hover { 
+  background: #db2777; 
+}
+
+.msgText {
+   text-align: center; 
+   font-size: 14px;
+    color: #6b7280; }
+.pls { 
+  text-align: center; }
+
+/* Dark mode  */
+@media (prefers-color-scheme: dark) {
+  .doksan {
+    background: inherit;
+    border-color: inherit;
+    color: #fff;
+  }
+
+  .signinBox { 
+    background: rgba(23,23,23,.7); 
+  }
+
+  .signinH, .msgText {
+     color:#fff; 
+    }
+
+  .inputField, .inputName ,.inputAddress{
+    background:#374151;
+     border-color:#4b5563; 
+     color:#fff;
+  }
+
+  .inputField::placeholder, .inputName::placeholder { 
+    color:#9ca3af; 
+  }
+
+  .inputField:focus, .inputName:focus {
+     border-color:#ec4899;
+     }
+}
