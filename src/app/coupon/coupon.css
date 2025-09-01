@@ -1,0 +1,138 @@
+.coupon-card {
+    margin-top: 20px;;
+     margin-left: 20px;;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  border: 1px solid #4a90e2;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 16px;
+  gap: 16px;
+  max-width: 720px;
+}
+
+.coupon-card.coupon-expired {
+  opacity: 0.6;
+  border-color: #c4c4c4;
+}
+
+.coupon-left {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.coupon-discount {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 96px;
+  height: 96px;
+  border-radius: 12px;
+  /* background: #eaf3ff; */
+  color: #1f66cd;
+  text-align: center;
+  /* border: 1px solid #cfe1ff; */
+}
+
+.coupon-rate {
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.coupon-off {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.coupon-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.coupon-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #222;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+
+.coupon-timer {
+  font-size: 14px;
+  color: #e30a0a;
+}
+
+.coupon-expired-text {
+  font-size: 14px;
+  color: #b00020;
+  font-weight: 600;
+}
+
+.coupon-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  min-width: 260px;
+}
+
+.coupon-code-wrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+}
+
+.coupon-code {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #cfd8e3;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  background: #f7f9fc;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: all; /* lets user manually select if needed */
+}
+
+.coupon-copy-btn {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: #4a90e2;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.05s ease, background 0.2s ease;
+  white-space: nowrap;
+}
+
+.coupon-copy-btn:hover {
+  background: #6eafff;
+}
+
+.coupon-copy-btn:active {
+  transform: scale(0.98);
+}
+
+.copy-status {
+  height: 16px;
+  font-size: 12px;
+  color: #1b8f2c;
+  align-self: flex-end;
+}
