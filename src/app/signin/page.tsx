@@ -24,7 +24,7 @@ export default function SignupPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const birthdate = birthDate;
+  // const birthate = birthDate;
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,7 +57,7 @@ export default function SignupPage() {
           phone,
           address: fullAddress,
           birthDate,
-          birthdate,
+          
         }),
       });
 
