@@ -122,25 +122,25 @@
   #search-input {
     background: #0b0b0b;
     color: #fff;
-    border-color: #e385af;
+    border-color: rgb(152, 192, 252);
   }
   #search-input::placeholder { color: #9ca3af; }
 
   #search-button {
-    background-color: #ff009d;
-    border-color: #ff009d;
+    background-color: rgb(56, 136, 255);
+    border-color: rgb(56, 136, 255);
     color: #fff;
   }
-  #search-button:hover { background-color: #e894de; }
+  #search-button:hover { background-color:rgb(152, 192, 252); }
 
   .book-card {
     background: #0b0b0b;                   
-    border-color: #e385af;                
+    border-color: rgb(152, 192, 252);                
     color: #eaeaea;
     box-shadow: 0 2px 6px rgba(0,0,0,0.5);  
   }
 
   .book-image  { background: #1a1a1a; }
-  .book-info   { background: #ff009d; color: #e8eef7; }
+  .book-info   { background: rgb(56, 136, 255); color: #e8eef7; }
   .book-price  { background: #141414; color: #eaeaea; }
 }

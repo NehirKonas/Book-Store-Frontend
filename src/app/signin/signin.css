@@ -37,7 +37,7 @@
   color: #111;
 }
 .inputField:focus,.inputAddress:focus, .inputName:focus { 
-  border-color: #ec4899; 
+  border-color: rgb(56, 136, 255); 
 }
 
 /*Address thingy*/
@@ -93,15 +93,15 @@
   width: 100%;
   border-radius: 8px;
   padding: 12px;
-  background: #ec4899;
-  color: #fff;
+  background: rgb(56, 136, 255);
+  color: #ffffff;
   font-weight: 500;
   border: none;
   cursor: pointer;
   transition: background .2s;
 }
 .loginBtn:hover { 
-  background: #db2777; 
+  background: rgb(159, 190, 236) 
 }
 
 .msgText {
@@ -138,6 +138,6 @@
   }
 
   .inputField:focus, .inputName:focus {
-     border-color:#ec4899;
+     border-color:rgb(56, 136, 255);
      }
 }

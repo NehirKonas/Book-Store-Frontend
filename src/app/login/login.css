@@ -40,14 +40,14 @@
 }
 
 .inputField:focus {
-  border-color: #ec4899;
+  border-color: rgb(56, 136, 255);
 }
 
 .loginBtn {
   width: 100%;
   border-radius: 8px;
   padding: 12px;
-  background: #ec4899; /* hot pink */
+  background: rgb(56, 136, 255); /* hot pink */
   color: white;
   font-weight: 500;
   border: none;
@@ -56,7 +56,7 @@
 }
 
 .loginBtn:hover {
-  background: #db2777;
+  background: rgb(56, 136, 255);
 }
 
 .msgText {
@@ -72,6 +72,9 @@
   .loginBox {
     background: rgba(23, 23, 23, 0.7);
   }
+  .loginBtn{
+    color:#fff;
+  }
   .loginH,
   .msgText {
     color: #fff;
@@ -85,6 +88,6 @@
     color: #9ca3af;
   }
   .inputField:focus {
-    border-color: #ec4899;
+    border-color: rgb(56, 136, 255);
   }
 }

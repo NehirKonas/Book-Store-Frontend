@@ -78,11 +78,11 @@ body {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #000000;
     --foreground: #ededed;
 
     /* Dark mode header */
-    --header-bg: #db2777; /* pembe */
+    --header-bg: rgb(56, 136, 255) /* pembe */
   }
 }
 

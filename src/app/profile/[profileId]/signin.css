@@ -62,8 +62,8 @@
 .inputField:focus,
 .inputAddress:focus,
 .inputName:focus {
-  border-color: #ec4899;
-  box-shadow: 0 0 0 3px rgba(236,72,153,.15); /* nazik focus */
+  border-color: rgb(56, 136, 255);
+  box-shadow: 0 0 0 3px rgb(32, 77, 144); /* nazik focus */
 }
 
 .inputField[disabled],
@@ -144,14 +144,14 @@
   width: 100%;
   border-radius: 8px;
   padding: 12px;
-  background: #ec4899;
-  color: #fff;
+  background: rgb(56, 136, 255);
+  color: #ffffff;
   font-weight: 500;
   border: none;
   cursor: pointer;
   transition: background .2s, transform .03s;
 }
-.loginBtn,.ChangePass:hover { background: #db2777; }
+.loginBtn,.ChangePass:hover { background: rgb(56, 136, 255); }
 .loginBtn,.ChangePass:active { transform: translateY(1px); }
 
 .pls { text-align: center; }
@@ -191,8 +191,8 @@
   .inputField:focus,
   .inputName:focus,
   .inputAddress:focus {
-    border-color:#ec4899;
-    box-shadow: 0 0 0 3px rgba(236,72,153,.18);
+    border-color:rgb(56, 136, 255);
+    box-shadow: 0 0 0 3px rgb(71, 137, 235)
   }
 }
 
@@ -201,7 +201,7 @@
   height: 20%;
   border-radius: 8px;
   padding: 12px;
-  background: #ec4899;
+  background: rgb(56, 136, 255);
   color: #fff;
   font-weight: 500;
   border: none;
@@ -236,7 +236,7 @@
   height: 20%;
   border-radius: 8px;
   padding: 12px;
-  background: #ec4899;
+  background: rgb(56, 136, 255);
   color: #fff;
   font-weight: 500;
   border: none;
