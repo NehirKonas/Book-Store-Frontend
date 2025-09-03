@@ -132,7 +132,9 @@
     color: #fff;
   }
   #search-button:hover { background-color:rgb(152, 192, 252); }
-
+  .book-title,.book-author,.bookPrice{
+  color:#fff;
+}
   .book-card {
     background: #0b0b0b;                   
     border-color: rgb(152, 192, 252);                

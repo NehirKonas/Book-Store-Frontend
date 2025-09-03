@@ -20,7 +20,7 @@ export default function DashboardPage() {
                     <p className="book-author">{book.author}</p>
                 </div>
                 <div className="book-price">
-                    <p>99 tl</p>
+                    <p className="bookPrice">99 tl</p>
                 </div>
         </div>
       ))}

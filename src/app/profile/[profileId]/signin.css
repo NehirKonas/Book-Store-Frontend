@@ -154,7 +154,9 @@
 .loginBtn,.ChangePass:hover { background: rgb(56, 136, 255); }
 .loginBtn,.ChangePass:active { transform: translateY(1px); }
 
-.pls { text-align: center; }
+.pls { 
+  text-align: center; 
+}
 
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
@@ -170,7 +172,7 @@
 
   .signinH,
   .msgText,
-  .adressInfo {            /* başlık da beyaz olsun */
+  .adressInfo,.pls {            /* başlık da beyaz olsun */
     color:#fff;
   }
 
@@ -181,7 +183,6 @@
     border-color:#4b5563;
     color:#fff;
   }
-
   .inputField::placeholder,
   .inputName::placeholder,
   .inputAddress::placeholder {
