@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import "./signin.css";
 
 export default function SignupPage() {
@@ -19,12 +20,12 @@ export default function SignupPage() {
   const [floor, setFloor] = useState("");
   const [apartmentUnit, setApartmentUnit] = useState("");
   const [address, setAddress] = useState("");
-  const [birthDate, setBirthDate] = useState(""); // yyyy-mm-dd
+  const [birthDate, setBirthDate] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // İSTEDİĞİN: birthDate'in alias'ı
   const birthdate = birthDate;
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,27 +46,28 @@ export default function SignupPage() {
         .filter(Boolean)
         .join(", ");
 
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/auth/register`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email,
-            password,
-            firstName: name,
-            lastName: surname,
-            phone,
-            address: fullAddress,
-            birthDate,  // CamelCase
-            birthdate,  // snake/lower-case alias
-          }),
-        }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/customers/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password,
+          firstName: name,
+          lastName: surname,
+          phone,
+          address: fullAddress,
+          birthDate,
+          birthdate,
+        }),
+      });
 
       const data = await res.json().catch(() => ({}));
 
       if (res.ok) {
+        const id = String(data.customerId ?? data.id);
+        localStorage.setItem("customerId", id);
+        if (data.token) localStorage.setItem("token", data.token);
+        router.replace(`/profile/${encodeURIComponent(id)}`);
         setMessage("Account created. You can log in now.");
       } else {
         setMessage(data?.message || "Could not register");
@@ -81,60 +83,17 @@ export default function SignupPage() {
     <main className="mainContainer">
       <form className="signinBox" onSubmit={handleSubmit}>
         <h1 className="signinH">Register</h1>
-
         <div className="nameRow">
-          <input
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="inputName"
-            autoComplete="given-name"
-            required
-          />
-          <input
-            type="text"
-            placeholder="Surname"
-            value={surname}
-            onChange={(e) => setSurname(e.target.value)}
-            className="inputName"
-            autoComplete="family-name"
-            required
-          />
+          <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} className="inputName" autoComplete="given-name" required />
+          <input type="text" placeholder="Surname" value={surname} onChange={(e) => setSurname(e.target.value)} className="inputName" autoComplete="family-name" required />
         </div>
 
-        <input
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="inputField"
-          autoComplete="email"
-          required
-        />
-
-        {/* Birthday field */}
-        <input
-          type="date"
-          placeholder="Birth date"
-          value={birthDate}
-          onChange={(e) => setBirthDate(e.target.value)}
-          className="inputField"
-          autoComplete="bday"
-          required
-        />
+        <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} className="inputField" autoComplete="email" required />
+        <input type="date" placeholder="Birth date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} className="inputField" autoComplete="bday" required />
 
         <div className="phone">
           <p className="doksan">+90</p>
-          <input
-            type="tel"
-            placeholder="Enter your phone number"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="inputField"
-            autoComplete="tel"
-            required
-          />
+          <input type="tel" placeholder="Enter your phone number" value={phone} onChange={(e) => setPhone(e.target.value)} className="inputField" autoComplete="tel" required />
         </div>
 
         <p className="adressInfo">Address Information</p>
@@ -223,26 +182,13 @@ export default function SignupPage() {
           />
         </div>
         <p className="adressInfo">Password</p>
+        <input type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} className="inputField" autoComplete="new-password" required />
 
-        <input
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="inputField"
-          autoComplete="new-password"
-          required
-        />
-
-        <button type="submit" className="loginBtn" disabled={loading}>
-          {loading ? "Creating..." : "Sign In"}
-        </button>
+        <button type="submit" className="loginBtn" disabled={loading}>{loading ? "Creating..." : "Sign In"}</button>
 
         <p className="pls">
           If you have an account{" "}
-          <Link href="/login" className="link">
-            Log in
-          </Link>
+          <Link href="/login" className="link">Log in</Link>
         </p>
 
         {message && <p className="msgText">{message}</p>}

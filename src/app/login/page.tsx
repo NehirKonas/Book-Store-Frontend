@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import "./login.css";
 import Link from "next/link";
 
-
 export default function LoginPage() {
-  const router = useRouter()
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState<string | null>(null);
@@ -19,7 +18,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/auth/login`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/customers/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -29,15 +28,14 @@ export default function LoginPage() {
 
       if (res.ok) {
         const id = String(data.customerId ?? data.id);
-        localStorage.setItem("customerId", String(data.customerId));
-        setMessage("Logegd In!");
+        localStorage.setItem("customerId", id);
+        if (data.token) localStorage.setItem("token", data.token);
+        setMessage("Logged in!");
         router.replace(`/profile/${encodeURIComponent(id)}`);
-        
-        
       } else {
         setMessage(data?.message || "Incorrect email or password!!");
       }
-    } catch (err) {
+    } catch {
       setMessage("Could Not Connect With the Server!");
     } finally {
       setLoading(false);
@@ -85,4 +83,3 @@ export default function LoginPage() {
     </main>
   );
 }
-

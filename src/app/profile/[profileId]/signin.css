@@ -1,3 +1,6 @@
+/* signin.css */
+
+/* Ana kapsayıcı */
 .mainContainer {
   min-height: 100vh;
   display: flex;
@@ -6,9 +9,9 @@
   padding: 24px;
 }
 
+/* Kutu */
 .signinBox {
   width: 100%;
-  max-width: 384px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -18,16 +21,32 @@
   background: rgba(255,255,255,.8);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  box-sizing: border-box;
 }
 
+/* Başlık */
 .signinH {
   font-size: 24px;
   text-align: center;
   font-weight: bold;
   color: #111;
+  line-height: 1.25;
+  margin: 0;
 }
 
-.inputField,.inputAddress, .inputName{
+/* Metin */
+.msgText {
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Alanlar */
+.inputField,
+.inputAddress,
+.inputName {
   width: 100%;
   border-radius: 8px;
   border: 1px solid #d1d5db;
@@ -35,34 +54,48 @@
   outline: none;
   background: #fff;
   color: #111;
-}
-.inputField:focus,.inputAddress:focus, .inputName:focus { 
-  border-color: #ec4899; 
+  line-height: 1.4;
+  box-sizing: border-box;
+  transition: border-color .15s ease, box-shadow .15s ease;
 }
 
-/*Address thingy*/
+.inputField:focus,
+.inputAddress:focus,
+.inputName:focus {
+  border-color: #ec4899;
+  box-shadow: 0 0 0 3px rgba(236,72,153,.15); /* nazik focus */
+}
+
+.inputField[disabled],
+.inputAddress[disabled],
+.inputName[disabled] {
+  opacity: .85;
+  cursor: not-allowed;
+}
+
+.inputAddress {
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  overflow: hidden;
+  text-align: left;
+  line-height: 1.4;
+}
+
+/* Address thingy – signup’taki GİBİ: addressing2 YATAY satır */
 .addressing1{
   display: flex;
   flex-direction: column;
   row-gap: 10px;
-  
 }
+
 .addressing2{
   display: flex;
   gap: 10px;
   align-items: center;
 }
-.inputAddress {
-  width: 100%;
-  min-height: 80px;
-  resize: vertical;        
-  overflow: hidden;          
-  text-align: left;         
-  line-height: 1.4;          
-}
 
-
-
+/* Telefon */
 .phone{
   display: flex;
   align-items: center;
@@ -73,22 +106,40 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 5px 10px;      
+  padding: 5px 10px;
   min-width: 10px;
-  background: inherit;     
-  color: inherit;          
-  border: 0;               
-  border-radius: 8px;      
+  background: inherit;   /* signup’taki gibi */
+  color: inherit;        /* signup’taki gibi */
+  border: 0;             /* signup’taki gibi */
+  border-radius: 8px;
 }
 
-.nameRow { 
+.nameRow {
   display: flex;
-   gap: 12px; 
-  }
-.nameRow .inputName { 
-  flex: 1; 
+  gap: 12px;
+}
+.nameRow .inputName { flex: 1; }
+
+
+.try{
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+  padding: 24px;
+  background: rgba(255,255,255,.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-sizing: border-box;
+  display: flex;
+  
+  gap: 12px;
+  flex:1;
+
 }
 
+/* Buton */
 .loginBtn {
   width: 100%;
   border-radius: 8px;
@@ -98,20 +149,14 @@
   font-weight: 500;
   border: none;
   cursor: pointer;
-  transition: background .2s;
+  transition: background .2s, transform .03s;
 }
-.loginBtn:hover { 
-  background: #db2777; 
-}
+.loginBtn,.ChangePass:hover { background: #db2777; }
+.loginBtn,.ChangePass:active { transform: translateY(1px); }
 
-.msgText {
-   text-align: center; 
-   font-size: 14px;
-    color: #6b7280; }
-.pls { 
-  text-align: center; }
+.pls { text-align: center; }
 
-/* Dark mode  */
+/* Dark mode */
 @media (prefers-color-scheme: dark) {
   .doksan {
     background: inherit;
@@ -119,25 +164,82 @@
     color: #fff;
   }
 
-  .signinBox { 
-    background: rgba(23,23,23,.7); 
+  .signinBox, .try,.buttons {
+    background: rgba(23,23,23,.7);
   }
 
-  .signinH, .msgText {
-     color:#fff; 
-    }
+  .signinH,
+  .msgText,
+  .adressInfo {            /* başlık da beyaz olsun */
+    color:#fff;
+  }
 
-  .inputField, .inputName ,.inputAddress{
+  .inputField,
+  .inputName,
+  .inputAddress {
     background:#374151;
-     border-color:#4b5563; 
-     color:#fff;
+    border-color:#4b5563;
+    color:#fff;
   }
 
-  .inputField::placeholder, .inputName::placeholder { 
-    color:#9ca3af; 
+  .inputField::placeholder,
+  .inputName::placeholder,
+  .inputAddress::placeholder {
+    color:#9ca3af;
   }
 
-  .inputField:focus, .inputName:focus {
-     border-color:#ec4899;
-     }
+  .inputField:focus,
+  .inputName:focus,
+  .inputAddress:focus {
+    border-color:#ec4899;
+    box-shadow: 0 0 0 3px rgba(236,72,153,.18);
+  }
+}
+
+.ChangePass{
+  width: 50%;
+  height: 20%;
+  border-radius: 8px;
+  padding: 12px;
+  background: #ec4899;
+  color: #fff;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background .2s, transform .03s;
+
+}
+.buttonsFam{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+  padding: 24px;
+  align-items: center;
+  box-sizing: border-box;
+}
+.PassFam{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+  padding: 24px;
+  align-items: center;
+  box-sizing: border-box;
+}
+.Edit{
+  width: 100%;
+  height: 20%;
+  border-radius: 8px;
+  padding: 12px;
+  background: #ec4899;
+  color: #fff;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background .2s, transform .03s;
 }

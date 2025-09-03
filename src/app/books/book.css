@@ -2,39 +2,27 @@
   display: flex;
   flex-direction: row;
   height: 100vh;
-  overflow: hidden; 
+  overflow: hidden; /* prevents the whole page from scrolling */
 }
 
-html, body {
-  overflow: hidden;   
-}
-
+/* static image container */
 .book-image-container {
-    height: 500px;
-    display: flex;
-    width: 450px;
+  width: 60%;
   border-radius: 25px;
   background-color: rgb(216, 216, 216);
-  margin:35px;
-  flex-shrink: 1;
-  aspect-ratio: 9 / 10;
-  min-width: 450px;
-  min-height: 500px;        
-
-  
+  margin:15px;
+  flex-shrink: 0; /* don’t let flexbox shrink it */
 }
 
-
+/* scrollable book info */
 .book-container {
-     height: calc(100vh - 100px);
   flex: 1;
   display: flex;
   flex-direction: column;
   border-radius: 25px;
-  margin-top:25px;
-  margin-right:25px;
-  overflow-y: auto; 
-    /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.359); */
+  margin:15px;
+  overflow-y: auto; /* allows internal scrolling */
+  background-color: aliceblue;
   padding: 20px;
 }
 
@@ -42,7 +30,7 @@ html, body {
 .book-secondary-info {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 }
 
 .add-to-cart-button {
@@ -57,7 +45,7 @@ html, body {
   cursor: pointer;
   transition: transform 0.1s ease-in-out;
   max-width: 300px;
-  margin-top: 20px; margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .add-to-cart-button:hover {

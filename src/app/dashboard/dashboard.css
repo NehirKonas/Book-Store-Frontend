@@ -1,126 +1,146 @@
-
+/* Reset */
 *{
-      margin: 0;
+  margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* ---------- LIGHT MODE (orijinal tasarım) ---------- */
 .dashboard-container {
-    display: flex;
-    flex-direction: column;
-    height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
 }
 
 .search-bar {
-    margin-left: 7%;
-    margin-top: 10px;
-    width: 40%;
-    height: 50px;
-    display: flex;
-    padding: 10px;
-    background-color: #ffffff;
-    /* border-bottom: 1px solid #ffffff; */
-    /* position: sticky; */
-    top: 0;
-    z-index: 10;
-    gap: 2px;
-
+  margin-left: 7%;
+  margin-top: 10px;
+  width: 40%;
+  height: 50px;
+  display: flex;
+  padding: 10px;
+  background-color: #ffffff;
+  /* border-bottom: 1px solid #ffffff; */
+  /* position: sticky; */
+  top: 0;
+  z-index: 10;
+  gap: 2px;
 }
 
 #search-input {
-    flex: 1;
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #4a90e2;
-    /* border-right: none; */
-    border-radius: 25px;
-      outline: none;
+  flex: 1;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid #4a90e2;
+  /* border-right: none; */
+  border-radius: 25px;
+  outline: none;
   transition: border 0.2s ease-in-out;
 }
-#search-input:focus {
-  border: 2px solid #4a90e2;  
-}
+#search-input:focus { border: 2px solid #4a90e2; }
 
 #search-button {
-  /* padding: 3px 14px 3px 14px; */
-    font-size: 16px;
-    border: 1px solid #ffffff;
-    background-color: #4a90e2;
-    color: white;
-    cursor: pointer;
-    border-radius: 50%;
-    margin-left: 10px; 
-    padding: 0;  
-    width: 32px;
-    height: 32px;
-    transition: transform 0.2s ease-in-out;
+  font-size: 16px;
+  border: 1px solid #ffffff;
+  background-color: #4a90e2;
+  color: white;
+  cursor: pointer;
+  border-radius: 50%;
+  margin-left: 10px;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  transition: transform 0.2s ease-in-out;
 }
-
 #search-button:hover {
-    background-color: #58b1ff;
-      transform: scale(1.09);
+  background-color: #58b1ff;
+  transform: scale(1.09);
 }
-
-/* .books-container {
- 
-    flex: 1;
-    overflow-y: auto;
- 
-    display: flex;
-    flex-wrap: wrap;      
- 
-    background-color: #de7474;
-} */
-
 
 .books-cards-container {
-    align-items: center;
-        overflow-y: auto;
-    justify-content: center;
-    flex: 1;
-    padding: 10px;
-    display: flex;
-    flex-wrap: wrap;      
-    gap: 20px;           
-    background-color: #ffffff;
-    align-items: center;
+  align-items: center;
+  overflow-y: auto;
+  justify-content: center;
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  background-color: #ffffff;
+  align-items: center;
 }
 
 .book-card {
-    border: 3px solid #58b1ff;
-    padding: 10px;
-    margin-bottom: 12px;
-    border-radius: 14px;
-    width: 250px;
-    height: 350px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border: 3px solid #58b1ff;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  width: 250px;
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
-.book-card:hover{
-    transform: scale(1.02);
-}
-
+.book-card:hover { transform: scale(1.02); }
 
 .book-image{
-    border-radius: 14px;
-    height: 70%;
-    background-color: rgb(234, 234, 234);
+  border-radius: 14px;
+  height: 70%;
+  background-color: rgb(234, 234, 234);
 }
 .book-info{
-    border-radius: 14px;
-    padding-left: 4%;
-    padding-top: 3%;
-    height: 20%;
-    background-color: #b5c8e1;
+  border-radius: 14px;
+  padding-left: 4%;
+  padding-top: 3%;
+  height: 20%;
+  background-color: #b5c8e1;
 }
 .book-price{
-    border-radius: 14px;
-    /* justify-content: center;
-    align-items: center; */
-    text-align: center;
-    padding-top: 3%;
-    height: 10%;
-    background-color: rgb(232, 232, 232);
+  border-radius: 14px;
+  text-align: center;
+  padding-top: 3%;
+  height: 10%;
+  background-color: rgb(232, 232, 232);
+}
 
+
+/* ---------- DARK MODE OVERRIDES (sadece karanlık mod) ---------- */
+@media (prefers-color-scheme: dark) {
+  .dashboard-container {
+    background: #000;          /* tam siyah zemin */
+    color: #eee;               /* varsayılan metin rengi */
+  }
+
+  .books-cards-container {
+    background: #000;          /* içerik alanı da siyah */
+  }
+
+  .search-bar {
+    background: transparent;   /* üst şerit siyah zemini göstersin */
+  }
+
+  #search-input {
+    background: #0b0b0b;
+    color: #fff;
+    border-color: #e385af;
+  }
+  #search-input::placeholder { color: #9ca3af; }
+
+  #search-button {
+    background-color: #ff009d;
+    border-color: #ff009d;
+    color: #fff;
+  }
+  #search-button:hover { background-color: #e894de; }
+
+  .book-card {
+    background: #0b0b0b;                   
+    border-color: #e385af;                
+    color: #eaeaea;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);  
+  }
+
+  .book-image  { background: #1a1a1a; }
+  .book-info   { background: #ff009d; color: #e8eef7; }
+  .book-price  { background: #141414; color: #eaeaea; }
 }
