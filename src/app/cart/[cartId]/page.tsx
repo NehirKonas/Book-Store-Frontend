@@ -1,19 +1,18 @@
 "use client";
-
 import React from "react";
 import Image from "next/image";
-import "./cart.css";                 // ensure styles are here
+import "./cart.css"; // ensure styles are here
 import { useAuth } from "@/app/lib/useAuth";
 
 interface CartItem {
   id: number;
   title: string;
   author: string;
-  price: string;
+  price: string; // e.g. "$12.99"
   amount: number;
 }
 
-const fakeCart: CartItem[] = [
+const initialCart: CartItem[] = [
   { id: 1, title: "The Great Gatsby", author: "F. Scott Fitzgerald", price: "$12.99", amount: 2 },
   { id: 2, title: "To Kill a Mockingbird", author: "Harper Lee", price: "$10.50", amount: 2 },
   { id: 3, title: "1984", author: "George Orwell", price: "$8.99", amount: 2 },
@@ -29,18 +28,36 @@ const fakeCart: CartItem[] = [
 
 export default function CartPage() {
   const { loading, loggedIn } = useAuth(true); // redirects to /login if not logged in
+  const [cart, setCart] = React.useState<CartItem[]>(initialCart);
+  const itemCount = cart.reduce((sum, item) => sum + item.amount, 0);
 
   if (loading) return <div style={{ padding: 24 }}>Loading cart…</div>;
   if (!loggedIn) return null;
 
-  const total = fakeCart.reduce((sum, item) => sum + parseFloat(item.price.replace("$", "")), 0);
+  // Recalculate from current cart
+  const total = cart.reduce((sum, item) => sum + parseFloat(item.price.replace("$", "")), 0);
+
+  function handleDelete(id: number) {
+    setCart(prev => prev.filter(item => item.id !== id));
+  }
+     function handleIncrement(id: number) {
+    setCart(prev =>
+      prev.map(item => (item.id === id ? { ...item, amount: item.amount + 1 } : item))
+    );
+  }
+  function handleDecrement(id:number){
+    setCart(prev =>
+      prev.map(item => (item.id === id ? { ...item, amount: item.amount - 1 } : item))
+    );
+  }
 
   return (
     <div className="cart-container">
       <div className="cart-items-container">
-        {fakeCart.map((item) => (
+        {cart.map((item) => (
           <div key={item.id} className="ordered-item-card">
             <div className="ordered-item-image"></div>
+
             <div className="ordered-item-info">
               <div className="ordered-item-title">{item.title}</div>
               <div className="ordered-item-author">{item.author}</div>
@@ -49,16 +66,37 @@ export default function CartPage() {
 
             <div className="ordered-item-buttons">
               <div className="ordered-item-ammount-button">
-                <button className="increment-amount-button">
-                  <Image src="/icons/plus.png" alt="Plus" width={10} height={10} className="cursor-pointer" />
+                <button className="increment-amount-button" onClick={() => handleIncrement(item.id)}>
+                  <Image
+                    src="/icons/plus.png"
+                    alt="Plus"
+                    width={10}
+                    height={10}
+                    className="cursor-pointer"
+                  />
                 </button>
+
                 <p className="amount-text">{item.amount}</p>
-                <button className="decrement-amount-button">
-                  <Image src="/icons/minus.png" alt="Minus" width={12} height={15} className="cursor-pointer" />
+
+                <button className="decrement-amount-button" onClick={() => handleDecrement(item.id)}>
+                  <Image
+                    src="/icons/minus.png"
+                    alt="Minus"
+                    width={12}
+                    height={15}
+                    className="cursor-pointer"
+                  />
                 </button>
               </div>
-              <button className="delete-button">
-                <Image src="/icons/trash-bin.png" alt="Trash" width={18} height={19} className="cursor-pointer" />
+
+              <button className="delete-button" onClick={() => handleDelete(item.id)}>
+                <Image
+                  src="/icons/trash-bin.png"
+                  alt="Trash"
+                  width={18}
+                  height={19}
+                  className="cursor-pointer"
+                />
               </button>
             </div>
           </div>
@@ -67,8 +105,9 @@ export default function CartPage() {
 
       <div className="cart-order-pane">
         <h2>Order Summary</h2>
+
         <div className="price-container">
-          <p>Total items: {fakeCart.length}</p>
+          <p>Total items: {itemCount}</p>
           <p>Total price: ${total.toFixed(2)}</p>
         </div>
 
