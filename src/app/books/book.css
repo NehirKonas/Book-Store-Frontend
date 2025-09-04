@@ -1,41 +1,43 @@
+/* page-wide flex container */
 .page {
   display: flex;
   flex-direction: row;
   height: 100vh;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
+/* keep the viewport from scrolling; inner column scrolls instead */
 html, body {
-  overflow: hidden;   
+  overflow: hidden;
 }
 
 .book-image-container {
-    height: 500px;
-    display: flex;
-    width: 450px;
+  height: 500px;
+  width: 450px;
+  min-width: 450px;
+  min-height: 500px;
+  aspect-ratio: 9 / 10;
+
+  display: flex;
+  flex-shrink: 1;
+  margin: 35px;
   border-radius: 25px;
   background-color: rgb(216, 216, 216);
-  margin:35px;
-  flex-shrink: 1;
-  aspect-ratio: 9 / 10;
-  min-width: 450px;
-  min-height: 500px;        
-
-  
 }
 
-
 .book-container {
-     height: calc(100vh - 100px);
+  height: calc(100vh - 100px);
   flex: 1;
   display: flex;
   flex-direction: column;
-  border-radius: 25px;
-  margin-top:25px;
-  margin-right:25px;
-  overflow-y: auto; 
-    /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.359); */
+  margin-top: 25px;
+  margin-right: 25px;
   padding: 20px;
+  border-radius: 25px;
+
+  /* scroll only the right column */
+  overflow-y: auto;
+  /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.359); */
 }
 
 .book-primary-info,
@@ -46,22 +48,49 @@ html, body {
 }
 
 .add-to-cart-button {
-  border-radius: 25px;
+  margin: 20px 0;
+  max-width: 300px;
   height: 40px;
-  font-size: larger;
-  font-weight: 600;
+
+  border: none;
+  border-radius: 25px;
   background-color: #4a90e2;
   color: #ffffff;
-  border: none;
+
+  font-size: larger;
+  font-weight: 600;
+
   box-shadow: 0 0 4px rgba(74, 144, 226, 0.5);
   cursor: pointer;
-  transition: transform 0.1s ease-in-out;
-  max-width: 300px;
-  margin-top: 20px; margin-bottom: 20px;
+  transition: transform 0.1s ease-in-out, background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .add-to-cart-button:hover {
   transform: scale(1.03);
-  box-shadow: 0 0 4px rgba(89, 255, 34, 0.614);
   background-color: #18cb24;
+  box-shadow: 0 0 4px rgba(89, 255, 34, 0.614);
+}
+
+/* simple responsive safeguard */
+@media (max-width: 900px) {
+  .page {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  .book-image-container {
+    margin: 20px;
+    width: 100%;
+    max-width: 500px;
+    min-width: 0;
+    align-self: center;
+  }
+
+  .book-container {
+    height: auto;
+    margin: 0 20px 20px;
+    overflow: visible;
+  }
 }
