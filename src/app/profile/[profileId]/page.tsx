@@ -82,15 +82,38 @@ function composeAddress({
 
 export default function ProfilePage() {
   const { loggedIn, loading: authLoading, id: authId } = useAuth(true);
-  const params = useParams() as { profileId?: string };
+  const params = useParams() as { customerId?: string }; // Fixed: was profileId, now customerId
   const router = useRouter();
   const API_BASE = useMemo(() => process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8080", []);
-  const [id, setId] = useState<string | null>(params?.profileId ?? null);
-
-  // if route id is missing, fallback to authId
+  
+  // Get the customer ID from URL parameter
+  const urlCustomerId = params?.customerId;
+  
+  // Authorization check - make sure logged-in user matches the profile being accessed
   useEffect(() => {
-    if (!id && authId) setId(authId);
-  }, [id, authId]);
+    if (!authLoading && loggedIn && authId && urlCustomerId) {
+      if (authId !== urlCustomerId) {
+        // User is trying to access someone else's profile - redirect to their own
+        console.log(`Redirecting: logged in as ${authId}, but trying to access ${urlCustomerId}`);
+        router.replace(`/profile/${encodeURIComponent(authId)}`);
+        return;
+      }
+    }
+  }, [authLoading, loggedIn, authId, urlCustomerId, router]);
+
+  // Use the URL customer ID if it matches the logged-in user
+  const [id, setId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    if (authLoading || !loggedIn) return;
+    
+    if (authId && urlCustomerId && authId === urlCustomerId) {
+      setId(urlCustomerId);
+    } else if (authId && !urlCustomerId) {
+      // Fallback to authId if URL doesn't have customerId
+      setId(authId);
+    }
+  }, [authLoading, loggedIn, authId, urlCustomerId]);
 
   // ---- your existing profile state & logic (unchanged) ----
   const [email, setEmail] = useState("");
@@ -287,7 +310,8 @@ export default function ProfilePage() {
     }
   }
 
-  if (authLoading) {
+  // Show loading while checking authentication
+  if (authLoading || (loggedIn && !id)) {
     return (
       <main className="mainContainer">
         <div className="signinBox" style={{ maxWidth: 520 }}>
@@ -297,7 +321,27 @@ export default function ProfilePage() {
       </main>
     );
   }
-  if (!loggedIn) return null;
+
+  // User not logged in - useAuth should handle redirect, but just in case
+  if (!loggedIn) {
+    return null;
+  }
+
+  // Show error if we have one
+  if (err) {
+    return (
+      <main className="mainContainer">
+        <div className="signinBox" style={{ maxWidth: 520 }}>
+          <h1 className="signinH">Profile Error</h1>
+          <p className="msgText" style={{ color: "#ef4444" }}>{err}</p>
+          <p className="pls">
+            <Link href="/dashboard" className="link">← Back to store</Link>
+          </p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="mainContainer">
       <div className="try">
