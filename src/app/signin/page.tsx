@@ -66,7 +66,14 @@ export default function SignupPage() {
       if (res.ok) {
         const id = String(data.customerId ?? data.id);
         localStorage.setItem("customerId", id);
-        if (data.token) localStorage.setItem("token", data.token);
+
+         // 2️⃣ Create cart for this user
+        await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/carts`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: id }), // matches Cart entity
+        });
+        
         router.replace(`/profile/${encodeURIComponent(id)}`);
         setMessage("Account created. You can log in now.");
       } else {
