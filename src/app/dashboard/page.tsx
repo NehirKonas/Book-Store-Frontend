@@ -21,8 +21,10 @@ interface Book {
 
 export default function DashboardPage() {
   const router = useRouter();
-  const API_BASE = useMemo(() => process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8080", []);
-  // State management
+  const API_BASE = useMemo(
+  () => (process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8080").replace(/\/+$/, ""),
+  []
+);
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,15 +35,14 @@ export default function DashboardPage() {
       typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
     try {
-      const res = await fetch(`${API_BASE}/books/allBooks`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        signal,
-      });
-
+      const res = await fetch(`${API_BASE}/api/books/allBooks`, {   // <— add /api
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  },
+  signal,
+});
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
         throw new Error(

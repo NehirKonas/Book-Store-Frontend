@@ -60,7 +60,7 @@ export default function BookPage() {
 
       try {
         // fetch the book
-        const r = await fetch(`${API_BASE}/books/${bookId}`, {
+        const r = await fetch(`${API_BASE}/api/books/${bookId}`, {
           headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
