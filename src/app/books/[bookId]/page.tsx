@@ -25,7 +25,7 @@ interface Author {
 
 export default function BookPage() {
   const params = useParams() as Record<string, string | undefined>;
-  const bookId = params.id ?? params.bookId ?? null; // <— supports /books/[id] or /books/[bookId]
+  const bookId = params.id ?? params.bookId ?? null; // supports /books/[id] or /books/[bookId]
 
   const API_BASE = useMemo(
     () => process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8080",
@@ -33,7 +33,9 @@ export default function BookPage() {
   );
 
   const [book, setBook] = useState<Book | null>(null);
-  const [author, setAuthor] = useState<Author | null>(null);
+  const [author, setAuthor] = useState<Author | null>(null);    // fallback JSON author
+  const [authorName, setAuthorName] = useState<string | null>(null); // text author name
+  const [publisherName, setPublisherName] = useState<string | null>(null); // text publisher name
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,8 +43,47 @@ export default function BookPage() {
   const formatGenre = (genre: string) =>
     genre ? genre.charAt(0) + genre.slice(1).toLowerCase() : "";
 
+  // fetch plain text author name by id
+  const fetchAuthorNameById = async (
+    id: number,
+    headers: Record<string, string>,
+    signal?: AbortSignal
+  ): Promise<string | null> => {
+    try {
+      const r = await fetch(`${API_BASE}/api/books/authors/${id}/name`, {
+        method: "GET",
+        headers: { ...headers, Accept: "text/plain" },
+        signal,
+      });
+      if (!r.ok) return null;
+      const txt = (await r.text()).trim();
+      return txt.length ? txt : null;
+    } catch {
+      return null;
+    }
+  };
+
+  // fetch plain text publisher name by id
+  const fetchPublisherNameById = async (
+    id: number,
+    headers: Record<string, string>,
+    signal?: AbortSignal
+  ): Promise<string | null> => {
+    try {
+      const r = await fetch(`${API_BASE}/api/books/publishers/${id}/name`, {
+        method: "GET",
+        headers: { ...headers, Accept: "text/plain" },
+        signal,
+      });
+      if (!r.ok) return null;
+      const txt = (await r.text()).trim();
+      return txt.length ? txt : null;
+    } catch {
+      return null;
+    }
+  };
+
   useEffect(() => {
-    // if the URL is wrong (no id), don't spin forever
     if (!bookId) {
       setError("No book id in URL.");
       setLoading(false);
@@ -57,14 +98,15 @@ export default function BookPage() {
 
       const token =
         typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      };
 
       try {
-        // fetch the book
+        // 1) fetch the book
         const r = await fetch(`${API_BASE}/api/books/${bookId}`, {
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
+          headers,
           signal: ctrl.signal,
         });
         if (!r.ok) {
@@ -74,22 +116,34 @@ export default function BookPage() {
         const b: Book = await r.json();
         setBook(b);
 
-        // fetch author name (optional)
-        try {
-          const ra = await fetch(`${API_BASE}/authors/${b.authorId}`, {
-            headers: {
-              "Content-Type": "application/json",
-              ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            },
-            signal: ctrl.signal,
-          });
-          if (ra.ok) setAuthor(await ra.json());
-          else setAuthor(null);
-        } catch {
-          setAuthor(null);
+        // 2) fetch author & publisher names in parallel
+        const [name, pubName] = await Promise.all([
+          fetchAuthorNameById(b.authorId, headers, ctrl.signal),
+          fetchPublisherNameById(b.publisherId, headers, ctrl.signal),
+        ]);
+
+        if (name) {
+          setAuthorName(name);
+          setAuthor(null); // clear any old JSON author
+        } else {
+          // fallback JSON author (optional)
+          try {
+            const ra = await fetch(`${API_BASE}/authors/${b.authorId}`, {
+              headers,
+              signal: ctrl.signal,
+            });
+            if (ra.ok) setAuthor(await ra.json());
+            else setAuthor(null);
+          } catch {
+            setAuthor(null);
+          }
         }
+
+        setPublisherName(pubName ?? null); // if null, UI will show Publisher #id
       } catch (e: any) {
-        if (e?.name !== "AbortError") setError(e?.message || "Could not load book");
+        if (e?.name !== "AbortError") {
+          setError(e?.message || "Could not load book");
+        }
       } finally {
         setLoading(false);
       }
@@ -108,8 +162,12 @@ export default function BookPage() {
             <h2>Loading…</h2>
             <h3>Loading…</h3>
           </div>
-          <button className="add-to-cart-button" disabled>Loading…</button>
-          <div className="book-secondary-info"><p>Loading…</p></div>
+          <button className="add-to-cart-button" disabled>
+            Loading…
+          </button>
+          <div className="book-secondary-info">
+            <p>Loading…</p>
+          </div>
         </div>
       </>
     );
@@ -130,9 +188,14 @@ export default function BookPage() {
     );
   }
 
-  const authorLabel = author
-    ? `${author.firstName ?? ""} ${author.lastName ?? ""}`.trim()
-    : `Author #${book.authorId}`;
+  const labelFromJson =
+    author ? `${author.firstName ?? ""} ${author.lastName ?? ""}`.trim() : "";
+  const authorLabel =
+    (authorName && authorName.trim()) ||
+    (labelFromJson || `Author #${book.authorId}`);
+  const publisherLabel =
+    (publisherName && publisherName.trim()) ||
+    `Publisher #${book.publisherId}`;
 
   return (
     <>
@@ -141,7 +204,7 @@ export default function BookPage() {
         <div className="book-primary-info">
           <h1>{book.title}</h1>
           <h2>{authorLabel}</h2>
-          <h3>Publisher #{book.publisherId}</h3>
+          <h3>{publisherLabel}</h3>
         </div>
 
         <button className="add-to-cart-button">
@@ -153,6 +216,11 @@ export default function BookPage() {
           <p className="book-secondary-info-bold">Genre: {formatGenre(book.genre)}</p>
           <p className="book-secondary-info-bold">Language: {formatGenre(book.language)}</p>
           <p>Format: {formatGenre(book.format)} </p> 
+          <p>{book.pageNumber} pg.</p>
+          <p>
+            {book.format} • {book.language}
+          </p>
+          <p>{formatGenre(book.genre)}</p>
           <p>Published: {book.date}</p>
           <p>ISBN: {book.isbn}</p>
           <p>Stock: {book.stock}</p>

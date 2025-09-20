@@ -7,7 +7,7 @@ interface Book {
   id: number;
   title: string;
   authorId: number;
-  authorName: string; 
+  authorName?: string;
   price: number;
   format: string;
   language: string;
@@ -22,65 +22,83 @@ interface Book {
 export default function DashboardPage() {
   const router = useRouter();
   const API_BASE = useMemo(
-  () => (process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8080").replace(/\/+$/, ""),
-  []
-);
+    () =>
+      (process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:8080").replace(
+        /\/+$/,
+        ""
+      ),
+    []
+  );
+
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch books function (only /books/allBooks)
+  // --- fetch a single author name by id (text/plain) ---
+  const fetchAuthorName = async (
+    authorId: number,
+    headers: Record<string, string>,
+    signal?: AbortSignal
+  ): Promise<string | null> => {
+    try {
+      const res = await fetch(
+        `${API_BASE}/api/books/authors/${authorId}/name`,
+        { method: "GET", headers: { ...headers, Accept: "text/plain" }, signal }
+      );
+      if (!res.ok) return null;
+      const name = (await res.text()).trim();
+      return name.length ? name : null;
+    } catch {
+      return null;
+    }
+  };
+
+  // --- main fetch (calls fetchAuthorName for each book) ---
   const fetchBooks = async (signal?: AbortSignal) => {
     const token =
       typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
+    const headers: Record<string, string> = {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+
     try {
-      const res = await fetch(`${API_BASE}/api/books/allBooks`, {   // <— add /api
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-      signal,
-    });
+      // 1) get books (no names)
+      const res = await fetch(`${API_BASE}/api/books/allBooks`, {
+        method: "GET",
+        headers,
+        signal,
+      });
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
         throw new Error(
-          errData?.message || `Failed to fetch books (${res.status})`
+          errData?.message ||
+            `Failed to fetch books (${res.status} ${res.statusText})`
         );
       }
-
       const data: Book[] = await res.json();
-      setBooks(data);
+
+      // 2) fetch the author name for each book’s authorId
+      const withNames: Book[] = await Promise.all(
+        data.map(async (b) => {
+          const name = await fetchAuthorName(b.authorId, headers, signal);
+          return { ...b, authorName: name ?? `Author #${b.authorId}` };
+        })
+      );
+
+      setBooks(withNames);
       setError(null);
     } catch (e: any) {
       if (e?.name !== "AbortError") {
         setError(e?.message || "Could not load books");
-
-        // Fallback to placeholder data so the UI still shows something
-        const placeholder: Book[] = Array.from({ length: 8 }, (_, i) => ({
-          id: 31,
-          title: `Could not load books`,
-          authorId:31,
-          authorName: `Could not load books`, 
-          price: 99 + i * 5,
-          format: "Could not load books",
-          language: "Could not load books",
-          genre: "Could not load books",
-          date: "2024-01-01",
-          pageNumber: 31,
-          isbn: `978-${i + 1}-123-456-7`,
-          stock: 0,
-          publisherId: 0,
-        }));
-        setBooks(placeholder);
+        setBooks([]);
       }
     }
   };
 
   useEffect(() => {
     const controller = new AbortController();
-
     (async () => {
       try {
         setLoading(true);
@@ -90,22 +108,19 @@ export default function DashboardPage() {
         setLoading(false);
       }
     })();
-
     return () => controller.abort();
   }, [API_BASE]);
 
-  // Helpers
   const formatPrice = (price: number): string => `${price.toFixed(2)} TL`;
   const formatGenre = (genre: string): string =>
     genre.charAt(0) + genre.slice(1).toLowerCase();
 
-  // Loading state
   if (loading) {
     return (
       <>
         {Array.from({ length: 8 }, (_, i) => (
           <div key={i} className="book-card" style={{ opacity: 0.7 }}>
-            {/* <div className="book-cover"></div> */}
+            <div className="book-cover" />
             <div className="book-image">
               <div
                 style={{
@@ -132,7 +147,6 @@ export default function DashboardPage() {
     );
   }
 
-  // Error state with retry option
   if (error && books.length === 0) {
     return (
       <div
@@ -170,7 +184,6 @@ export default function DashboardPage() {
 
   return (
     <>
-      {/* Warning if using fallback data */}
       {error && books.length > 0 && (
         <div
           style={{
@@ -185,7 +198,7 @@ export default function DashboardPage() {
             gap: "10px",
           }}
         >
-          <span>⚠️ Using placeholder data - API connection failed: {error}</span>
+          <span>⚠️ {error}</span>
           <button
             onClick={() => {
               setLoading(true);
@@ -206,11 +219,15 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Render books */}
       {books.map((book) => (
-        <div key={book.id} className="book-card" onClick={()=> router.replace(`/books/${encodeURIComponent(book.id)}`)} >
-          <div className="book-cover"></div>
-
+        <div
+          key={book.id}
+          className="book-card"
+          onClick={() =>
+            router.replace(`/books/${encodeURIComponent(book.id)}`)
+          }
+        >
+          <div className="book-cover" />
           <div className="book-image">
             <p>missing image</p>
           </div>
@@ -221,7 +238,7 @@ export default function DashboardPage() {
                 ? `${book.title.substring(0, 25)}...`
                 : book.title}
             </h3>
-            <p className="book-author">Author #{book.authorId}</p>
+            <p className="book-author">{book.authorName}</p>
           </div>
 
           <div className="book-price">
