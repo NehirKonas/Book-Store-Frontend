@@ -421,7 +421,7 @@ export default function ProfilePage() {
         {/* Change Password */}
         <div className="PassFam">
           <p className="signinH">Change Password</p>
-          <form className="PassFam" onSubmit={handleChangePassword}>
+          <div className="PassFam-inner" onSubmit={handleChangePassword}>
             <input className="inputField" type="password" placeholder="Current password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} required autoComplete="current-password" />
             <input className="inputField" type="password" placeholder="New password (min 6 chars)" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} required minLength={6} autoComplete="new-password" />
             <input className="inputField" type="password" placeholder="Confirm new password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required minLength={6} autoComplete="new-password" />
@@ -435,7 +435,7 @@ export default function ProfilePage() {
             <button type="submit" className="loginBtn" disabled={savingPwd} style={{ marginTop: 8, opacity: savingPwd ? 0.7 : 1, pointerEvents: savingPwd ? "none" : "auto" }}>
               {savingPwd ? "Saving…" : "Change Password"}
             </button>
-          </form>
+          </div>
         </div>
       </div>
     </main>
