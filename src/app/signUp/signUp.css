@@ -6,7 +6,7 @@
   padding: 24px;
 }
 
-.signinBox {
+.signUpBox {
   width: 100%;
   max-width: 384px;
   display: flex;
@@ -20,7 +20,7 @@
   -webkit-backdrop-filter: blur(8px);
 }
 
-.signinH {
+.signUpH {
   font-size: 24px;
   text-align: center;
   font-weight: bold;
@@ -119,11 +119,11 @@
     color: #fff;
   }
 
-  .signinBox { 
+  .signUpBox { 
     background: rgba(23,23,23,.7); 
   }
 
-  .signinH, .msgText {
+  .signUpH, .msgText {
      color:#fff; 
     }
 
