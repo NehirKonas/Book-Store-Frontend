@@ -8,6 +8,7 @@ interface Book {
   id: number;
   title: string;
   authorId: number;
+  authorName: string; 
   price: number;
   format: string;
   language: string;
@@ -36,13 +37,13 @@ export default function DashboardPage() {
 
     try {
       const res = await fetch(`${API_BASE}/api/books/allBooks`, {   // <— add /api
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  },
-  signal,
-});
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      signal,
+    });
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
         throw new Error(
@@ -62,6 +63,7 @@ export default function DashboardPage() {
           id: i + 1,
           title: `Book Title ${i + 1}`,
           authorId: i + 1,
+          authorName: `Author ${i + 1}`, 
           price: 99 + i * 5,
           format: "PHYSICAL",
           language: "ENGLISH",
