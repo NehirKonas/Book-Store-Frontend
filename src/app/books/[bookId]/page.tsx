@@ -149,9 +149,10 @@ export default function BookPage() {
         </button>
 
         <div className="book-secondary-info">
-          <p>{book.pageNumber} pg.</p>
-          <p>{book.format} • {book.language}</p>
-          <p>{formatGenre(book.genre)}</p>
+          <p className="book-secondary-info-bold">Pages: {book.pageNumber}</p>
+          <p className="book-secondary-info-bold">Genre: {formatGenre(book.genre)}</p>
+          <p className="book-secondary-info-bold">Language: {formatGenre(book.language)}</p>
+          <p>Format: {formatGenre(book.format)} </p> 
           <p>Published: {book.date}</p>
           <p>ISBN: {book.isbn}</p>
           <p>Stock: {book.stock}</p>

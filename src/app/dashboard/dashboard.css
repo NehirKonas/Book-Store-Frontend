@@ -5,7 +5,6 @@
   box-sizing: border-box;
 }
 
-/* ---------- LIGHT MODE (orijinal tasarım) ---------- */
 .dashboard-container {
   display: flex;
   flex-direction: column;
@@ -40,6 +39,7 @@
 #search-input:focus { border: 2px solid #4a90e2; }
 
 #search-button {
+
   font-size: 16px;
   border: 1px solid #ffffff;
   background-color: #4a90e2;
@@ -47,7 +47,8 @@
   cursor: pointer;
   border-radius: 50%;
   margin-left: 10px;
-  padding: 0;
+  padding-left: 5px;
+  padding-bottom: 2px;
   width: 32px;
   height: 32px;
   transition: transform 0.2s ease-in-out;
@@ -71,7 +72,7 @@
 }
 
 .book-card {
-  border: 3px solid #58b1ff;
+  /* border: 3px solid #58b1ff; */
   padding: 10px;
   margin-bottom: 12px;
   border-radius: 14px;
@@ -79,9 +80,12 @@
   height: 350px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.418);
 }
-.book-card:hover { transform: scale(1.02); }
+.book-card:hover { 
+  transform: scale(1.02);
+  cursor: pointer;
+}
 
 .book-image{
   border-radius: 14px;
@@ -93,30 +97,34 @@
   padding-left: 4%;
   padding-top: 3%;
   height: 20%;
-  background-color: #b5c8e1;
+  font-weight: 500;
+  background-color: #b5c8e100;
+}
+.book-title{
+    font-weight: 700;
 }
 .book-price{
   border-radius: 14px;
   text-align: center;
   padding-top: 3%;
   height: 10%;
-  background-color: rgb(232, 232, 232);
+  background-color: #58b1ff;
 }
 
 
 /* ---------- DARK MODE OVERRIDES (sadece karanlık mod) ---------- */
 @media (prefers-color-scheme: dark) {
   .dashboard-container {
-    background: #000;          /* tam siyah zemin */
-    color: #eee;               /* varsayılan metin rengi */
+    background: #000;        
+    color: #eee;               
   }
 
   .books-cards-container {
-    background: #000;          /* içerik alanı da siyah */
+    background: #000;         
   }
 
   .search-bar {
-    background: transparent;   /* üst şerit siyah zemini göstersin */
+    background: transparent; 
   }
 
   #search-input {

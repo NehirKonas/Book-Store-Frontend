@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
-// Define interfaces
 interface Book {
   id: number;
   title: string;
@@ -60,19 +59,19 @@ export default function DashboardPage() {
 
         // Fallback to placeholder data so the UI still shows something
         const placeholder: Book[] = Array.from({ length: 8 }, (_, i) => ({
-          id: i + 1,
-          title: `Book Title ${i + 1}`,
-          authorId: i + 1,
-          authorName: `Author ${i + 1}`, 
+          id: 31,
+          title: `Could not load books`,
+          authorId:31,
+          authorName: `Could not load books`, 
           price: 99 + i * 5,
-          format: "PHYSICAL",
-          language: "ENGLISH",
-          genre: "FICTION",
+          format: "Could not load books",
+          language: "Could not load books",
+          genre: "Could not load books",
           date: "2024-01-01",
-          pageNumber: 200 + i * 10,
+          pageNumber: 31,
           isbn: `978-${i + 1}-123-456-7`,
-          stock: Math.max(0, 10 - i),
-          publisherId: 1,
+          stock: 0,
+          publisherId: 0,
         }));
         setBooks(placeholder);
       }
@@ -106,7 +105,7 @@ export default function DashboardPage() {
       <>
         {Array.from({ length: 8 }, (_, i) => (
           <div key={i} className="book-card" style={{ opacity: 0.7 }}>
-            <div className="book-cover"></div>
+            {/* <div className="book-cover"></div> */}
             <div className="book-image">
               <div
                 style={{
@@ -213,26 +212,7 @@ export default function DashboardPage() {
           <div className="book-cover"></div>
 
           <div className="book-image">
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "5px",
-                fontSize: "12px",
-                color: "#666",
-              }}
-            >
-              <div>{formatGenre(book.genre)}</div>
-              <div>{book.format}</div>
-              <div>Stock: {book.stock}</div>
-              {book.isbn && (
-                <div style={{ fontSize: "10px" }}>
-                  ISBN: {book.isbn.substring(0, 10)}...
-                </div>
-              )}
-            </div>
+            <p>missing image</p>
           </div>
 
           <div className="book-info">
