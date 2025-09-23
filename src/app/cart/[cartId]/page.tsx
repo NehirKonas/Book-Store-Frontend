@@ -88,7 +88,6 @@ export default function CartPage() {
         { method: "DELETE" }
       );
       if (!res.ok) throw new Error("Could not delete item");
-
       setCart((prev) => prev.filter((item) => item.bookId !== bookId));
     } catch (err) {
       console.error(err);
@@ -118,52 +117,25 @@ export default function CartPage() {
   };
 
   const handleDecrement = async (bookId: number) => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE}/api/carts/${userId}/items/${bookId}/decrement`,
-        { method: "PUT" }
-      );
-      if (!res.ok) throw new Error("Could not decrement item");
-
-      setCart((prev) =>
+    setCart((prev) =>
       prev.map((item) =>
         item.bookId === bookId
           ? { ...item, quantity: Math.max(1, item.quantity - 1) }
           : item
       )
     );
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/carts/${userId}/items/${bookId}/decrement`,
+        { method: "PUT" }
+      );
+      if (!res.ok) throw new Error("Could not decrement item");
     } catch (err) {
       console.error(err);
       alert("Failed to decrement item from cart");
     }
   };
-
-
-  
-const placeOrder = async () => {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE}/api/orders/cart/${userId}/checkout`,
-      { method: "POST" }
-    );
-
-    if (!res.ok) {
-      const text = await res.text();
-      console.error("Backend error:", res.status, text);
-      throw new Error("Could not place order");
-    }
-
-    const data = await res.json();
-    console.log("Order placed:", data);
-
-    // If success, reload the page
-    window.location.reload();
-
-  } catch (err) {
-    console.error(err);
-    alert("Failed to place order");
-  }
-};
 
 
   return (
@@ -230,7 +202,7 @@ const placeOrder = async () => {
           <button className="add-coupon-button">Add Coupon</button>
         </div>
 
-        <button className="place-order-button" onClick={() => placeOrder()}>Place Order</button>
+        <button className="place-order-button">Place Order</button>
       </div>
     </div>
   );
