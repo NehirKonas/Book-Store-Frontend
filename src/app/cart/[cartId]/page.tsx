@@ -1,61 +1,176 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import "./cart.css"; // ensure styles are here
+import "./cart.css";
 import { useAuth } from "@/app/lib/useAuth";
 
-interface CartItem {
-  id: number;
+interface CartItemView {
+  bookId: number;
   title: string;
   author: string;
-  price: string; // e.g. "$12.99"
-  amount: number;
+  price: number;
+  quantity: number;
 }
 
-const initialCart: CartItem[] = [
-  { id: 1, title: "The Great Gatsby", author: "F. Scott Fitzgerald", price: "$12.99", amount: 2 },
-  { id: 2, title: "To Kill a Mockingbird", author: "Harper Lee", price: "$10.50", amount: 2 },
-  { id: 3, title: "1984", author: "George Orwell", price: "$8.99", amount: 2 },
-  { id: 4, title: "The Hobbit", author: "J.R.R. Tolkien", price: "$15.75", amount: 2 },
-  { id: 5, title: "Pride and Prejudice", author: "Jane Austen", price: "$9.20", amount: 2 },
-  { id: 6, title: "1984", author: "George Orwell", price: "$8.99", amount: 2 },
-  { id: 7, title: "The Hobbit", author: "J.R.R. Tolkien", price: "$15.75", amount: 2 },
-  { id: 8, title: "Pride and Prejudice", author: "Jane Austen", price: "$9.20", amount: 2 },
-  { id: 9, title: "1984", author: "George Orwell", price: "$8.99", amount: 2 },
-  { id: 10, title: "The Hobbit", author: "J.R.R. Tolkien", price: "$15.75", amount: 2 },
-  { id: 11, title: "Pride and Prejudice", author: "Jane Austen", price: "$9.20", amount: 2 },
-];
-
 export default function CartPage() {
-  const { loading, loggedIn } = useAuth(true); // redirects to /login if not logged in
-  const [cart, setCart] = React.useState<CartItem[]>(initialCart);
-  const itemCount = cart.reduce((sum, item) => sum + item.amount, 0);
+  const { loading, loggedIn } = useAuth(true);
+
+  // --- Hooks (always at the top)
+  const [cart, setCart] = useState<CartItemView[]>([]);
+  const [total, setTotal] = useState<number>(0);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Load userId safely on client-side
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const id = localStorage.getItem("customerId");
+      setUserId(id);
+    }
+  }, []);
+
+  // Fetch cart items
+  useEffect(() => {
+    if (!userId || !loggedIn) return;
+
+    async function fetchCart() {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/carts/${userId}/items`
+        );
+        if (!res.ok) throw new Error("Cannot fetch cart");
+        const data: any[] = await res.json();
+
+        const mapped: CartItemView[] = data.map((row) => ({
+          bookId: row[0],
+          title: row[1],
+          author: row[2],
+          price: parseFloat(row[3]),
+          quantity: row[4],
+        }));
+
+        setCart(mapped);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    fetchCart();
+  }, [userId, loggedIn]);
+
+  // Fetch total whenever cart changes
+  useEffect(() => {
+    if (!userId || !loggedIn) return;
+
+    async function fetchTotal() {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE}/api/carts/${userId}/items/total`
+        );
+        if (!res.ok) throw new Error("Cannot fetch total");
+        const data = await res.json();
+        setTotal(data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    fetchTotal();
+  }, [cart, userId, loggedIn]);
 
   if (loading) return <div style={{ padding: 24 }}>Loading cart…</div>;
   if (!loggedIn) return null;
 
-  // Recalculate from current cart
-  const total = cart.reduce((sum, item) => sum + parseFloat(item.price.replace("$", "")), 0);
+  // --- Handlers
+  const handleDelete = async (bookId: number) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/carts/${userId}/items/${bookId}`,
+        { method: "DELETE" }
+      );
+      if (!res.ok) throw new Error("Could not delete item");
 
-  function handleDelete(id: number) {
-    setCart(prev => prev.filter(item => item.id !== id));
-  }
-     function handleIncrement(id: number) {
-    setCart(prev =>
-      prev.map(item => (item.id === id ? { ...item, amount: item.amount + 1 } : item))
+      setCart((prev) => prev.filter((item) => item.bookId !== bookId));
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete item from cart");
+    }
+  };
+
+  const handleIncrement = async (bookId: number) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/carts/${userId}/items/${bookId}/increment`,
+        { method: "PUT" }
+      );
+      if (!res.ok) throw new Error("Could not increment item");
+
+      setCart((prev) =>
+        prev.map((item) =>
+          item.bookId === bookId
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        )
+      );
+    } catch (err) {
+      console.error(err);
+      alert("Failed to increment item from cart");
+    }
+  };
+
+  const handleDecrement = async (bookId: number) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE}/api/carts/${userId}/items/${bookId}/decrement`,
+        { method: "PUT" }
+      );
+      if (!res.ok) throw new Error("Could not decrement item");
+
+      setCart((prev) =>
+      prev.map((item) =>
+        item.bookId === bookId
+          ? { ...item, quantity: Math.max(1, item.quantity - 1) }
+          : item
+      )
     );
-  }
-  function handleDecrement(id:number){
-    setCart(prev =>
-      prev.map(item => (item.id === id ? { ...item, amount: item.amount - 1 } : item))
+    } catch (err) {
+      console.error(err);
+      alert("Failed to decrement item from cart");
+    }
+  };
+
+
+  
+const placeOrder = async () => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE}/api/orders/cart/${userId}/checkout`,
+      { method: "POST" }
     );
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("Backend error:", res.status, text);
+      throw new Error("Could not place order");
+    }
+
+    const data = await res.json();
+    console.log("Order placed:", data);
+
+    // If success, reload the page
+    window.location.reload();
+
+  } catch (err) {
+    console.error(err);
+    alert("Failed to place order");
   }
+};
+
 
   return (
     <div className="cart-container">
       <div className="cart-items-container">
         {cart.map((item) => (
-          <div key={item.id} className="ordered-item-card">
+          <div key={item.bookId} className="ordered-item-card">
             <div className="ordered-item-image"></div>
 
             <div className="ordered-item-info">
@@ -66,7 +181,7 @@ export default function CartPage() {
 
             <div className="ordered-item-buttons">
               <div className="ordered-item-ammount-button">
-                <button className="increment-amount-button" onClick={() => handleIncrement(item.id)}>
+                <button className="increment-amount-button" onClick={() => handleIncrement(item.bookId)}>
                   <Image
                     src="/icons/plus.png"
                     alt="Plus"
@@ -76,9 +191,9 @@ export default function CartPage() {
                   />
                 </button>
 
-                <p className="amount-text">{item.amount}</p>
+                <p className="amount-text">{item.quantity}</p>
 
-                <button className="decrement-amount-button" onClick={() => handleDecrement(item.id)}>
+                <button className="decrement-amount-button" onClick={() => handleDecrement(item.bookId)}>
                   <Image
                     src="/icons/minus.png"
                     alt="Minus"
@@ -89,7 +204,7 @@ export default function CartPage() {
                 </button>
               </div>
 
-              <button className="delete-button" onClick={() => handleDelete(item.id)}>
+              <button className="delete-button" onClick={() => handleDelete(item.bookId)}>
                 <Image
                   src="/icons/trash-bin.png"
                   alt="Trash"
@@ -107,7 +222,6 @@ export default function CartPage() {
         <h2>Order Summary</h2>
 
         <div className="price-container">
-          <p>Total items: {itemCount}</p>
           <p>Total price: ${total.toFixed(2)}</p>
         </div>
 
@@ -116,7 +230,7 @@ export default function CartPage() {
           <button className="add-coupon-button">Add Coupon</button>
         </div>
 
-        <button className="place-order-button">Place Order</button>
+        <button className="place-order-button" onClick={() => placeOrder()}>Place Order</button>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-// app/signUp/page.tsx
+// app/signin/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -24,7 +24,7 @@ export default function SignupPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // const birthate = birthDate;
+  const birthdate = birthDate;
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,7 +57,7 @@ export default function SignupPage() {
           phone,
           address: fullAddress,
           birthDate,
-          
+          birthdate,
         }),
       });
 
@@ -66,7 +66,14 @@ export default function SignupPage() {
       if (res.ok) {
         const id = String(data.customerId ?? data.id);
         localStorage.setItem("customerId", id);
-        if (data.token) localStorage.setItem("token", data.token);
+
+         // 2️⃣ Create cart for this user
+        await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/carts`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: id }), // matches Cart entity
+        });
+        
         router.replace(`/profile/${encodeURIComponent(id)}`);
         setMessage("Account created. You can log in now.");
       } else {
@@ -81,8 +88,8 @@ export default function SignupPage() {
 
   return (
     <main className="mainContainer">
-      <form className="signUpBox" onSubmit={handleSubmit}>
-        <h1 className="signUpH">Register</h1>
+      <form className="signinBox" onSubmit={handleSubmit}>
+        <h1 className="signinH">Register</h1>
         <div className="nameRow">
           <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} className="inputName" autoComplete="given-name" required />
           <input type="text" placeholder="Surname" value={surname} onChange={(e) => setSurname(e.target.value)} className="inputName" autoComplete="family-name" required />
@@ -184,7 +191,7 @@ export default function SignupPage() {
         <p className="adressInfo">Password</p>
         <input type="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} className="inputField" autoComplete="new-password" required />
 
-        <button type="submit" className="loginBtn" disabled={loading}>{loading ? "Creating..." : "Sign Up"}</button>
+        <button type="submit" className="loginBtn" disabled={loading}>{loading ? "Creating..." : "Sign In"}</button>
 
         <p className="pls">
           If you have an account{" "}
