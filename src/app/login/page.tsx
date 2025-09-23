@@ -73,8 +73,8 @@ export default function LoginPage() {
 
         <p className="pls">
           If you are not a member please{" "}
-          <Link href="/signin" className="underline font-medium">
-            Sign In
+          <Link href="/signUp" className="underline font-medium">
+            Sign Up
           </Link>
         </p>
 
