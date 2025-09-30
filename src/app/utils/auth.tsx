@@ -1,28 +1,28 @@
-// utils/auth.ts
-export const setCustomerId = (customerId: string | null) => {
-  try {
-    if (customerId) {
-      localStorage.setItem("customerId", customerId);
-    } else {
-      localStorage.removeItem("customerId");
-    }
-    
-    // Dispatch custom event to notify Header component
-    window.dispatchEvent(new CustomEvent("customerIdChanged"));
-  } catch (error) {
-    console.error("Error updating localStorage:", error);
-  }
-};
+// src/app/utils/auth.tsx
+// Tab-scoped session via sessionStorage (auto-clears when tab closes)
 
-export const getCustomerId = (): string | null => {
+export type CustomerId = string;
+const SESSION_KEY = "customerId";
+
+export function setCustomerId(id: CustomerId | null) {
   try {
-    return localStorage.getItem("customerId");
-  } catch (error) {
-    console.error("Error reading from localStorage:", error);
+    if (id) sessionStorage.setItem(SESSION_KEY, id);
+    else sessionStorage.removeItem(SESSION_KEY);
+    window.dispatchEvent(new CustomEvent("customerIdChanged"));
+  } catch (e) {
+    console.error("auth:setCustomerId error:", e);
+  }
+}
+
+export function getCustomerId(): CustomerId | null {
+  try {
+    return sessionStorage.getItem(SESSION_KEY);
+  } catch (e) {
+    console.error("auth:getCustomerId error:", e);
     return null;
   }
-};
+}
 
-export const clearCustomerId = () => {
+export function clearCustomerId() {
   setCustomerId(null);
-};
+}
