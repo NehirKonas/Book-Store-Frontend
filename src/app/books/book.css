@@ -4,6 +4,10 @@
   flex-direction: row;
   height: 100vh;
     scrollbar-width: none;
+    /* width: 100vh; */
+    height: 100%;
+    
+    
 }
 
 html, body {
@@ -12,29 +16,34 @@ html, body {
 }
 
 .book-image-container {
-  height: 500px;
-  width: 450px;
-  min-width: 450px;
-  min-height: 500px;
-  aspect-ratio: 9 / 10;
-
-  display: flex;
-  flex-shrink: 1;
-  margin: 35px;
-  border-radius: 25px;
-  background-color: rgb(216, 216, 216);
+  width: 300px;       /* fixed width */
+  height: 450px;      /* fixed height */
+  flex-shrink: 0;     /* 🚀 prevents shrinking in flex layout */
+  /* display: flex; */
+  margin-top: 40px;
+  margin-left: 20%;
+  /* margin-right: 10%; */
+  align-items: center;
+  justify-content: center;
+  /* background-color: #b82e2e; */
+  border-radius: 12px;
+  overflow: hidden;   /* make sure the image doesn’t overflow */
 }
-
 .book-container {
+  min-width: 500px;
   height: calc(100vh - 100px);
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-top: 25px;
-  margin-right: 25px;
-  padding: 20px;
+  margin-top: 40px;
+  margin-left: 5%;
+  padding-left: 20px;
   border-radius: 25px;
  scrollbar-width: none;   
+     justify-content: flex-start;
+    align-items: flex-start;
+
+    /* background-color: #18cb24; */
   /* scroll only the right column */
   /* overflow-y: scroll; */
   /* box-shadow: 0 2px 6px rgba(0, 0, 0, 0.359); */
@@ -43,6 +52,20 @@ html, body {
   display: none;                  /* Chrome, Safari */
 }
 
+.book-image {
+    width: 300px;
+    height: 450px;
+    border-radius: 15px;
+    overflow: hidden;
+    
+      /* object-fit: cover; */
+}
+.book-image img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
 .book-primary-info {
   display: flex;
   flex-direction: column;
@@ -54,7 +77,7 @@ html, body {
     font-size: 1rem; 
   font-weight: 500;
   color: #555; 
-  gap: 5px;
+  /* gap: 5px; */
 }
 .book-secondary-info-bold{
     font-weight: 600;
@@ -63,25 +86,25 @@ html, body {
 .book-primary-info h1 {
   font-size: 2rem; 
   font-weight: 700; 
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 }
 
 .book-primary-info h2 {
   font-size: 1.5rem;   
   font-weight: 700; 
-  margin-bottom: 5px;
+  /* margin-bottom: 5px; */
 }
 
 .book-primary-info h3 {
   font-size: 1rem; 
   font-weight: 600;
   color: #555;    
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
 }
 
 .add-to-cart-button {
   margin: 20px 0;
-  max-width: 300px;
+  width: 300px;
   height: 40px;
 
   border: none;
@@ -118,11 +141,12 @@ html, body {
     max-width: 500px;
     min-width: 0;
     align-self: center;
+    /* background-color: #18cb24; */
   }
 
-  .book-container {
+  /* .book-container {
     height: auto;
     margin: 0 20px 20px;
     overflow: visible;
-  }
+  } */
 }

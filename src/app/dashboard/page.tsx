@@ -17,6 +17,7 @@ interface Book {
   isbn: string;
   stock: number;
   publisherId: number;
+  bookImageUrl: string;
 }
 
 export default function DashboardPage() {
@@ -198,7 +199,7 @@ export default function DashboardPage() {
             gap: "10px",
           }}
         >
-          <span>⚠️ {error}</span>
+          <span>⚠ {error}</span>
           <button
             onClick={() => {
               setLoading(true);
@@ -229,7 +230,7 @@ export default function DashboardPage() {
         >
           <div className="book-cover" />
           <div className="book-image">
-            <p>missing image</p>
+            <img src={book.bookImageUrl} />
           </div>
 
           <div className="book-info">
